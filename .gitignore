@@ -30,3 +30,7 @@ dist-ssr
 
 # Backend env (never commit real credentials)
 backend/.env
+frontend/src
+frontend/FinCtrl
+frontend/node_modules
+node_modules
