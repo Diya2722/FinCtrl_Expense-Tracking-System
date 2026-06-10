@@ -1,0 +1,35 @@
+services:
+  # Backend API
+  - type: web
+    name: finctrl-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false   # Set in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        sync: false   # Set to your Render static site URL
+      - key: EMAIL_USER
+        sync: false   # Set in Render dashboard
+      - key: EMAIL_PASSWORD
+        sync: false   # Set in Render dashboard
+
+  # Frontend (static site)
+  - type: static
+    name: finctrl-frontend
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false   # Set to your backend URL e.g. https://finctrl-backend.onrender.com/api
