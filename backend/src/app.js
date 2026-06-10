@@ -22,7 +22,7 @@ const allowedOrigins = [
   env.clientUrl,
   "http://localhost:5173",
   "http://localhost:4173",
-  "https://finctrl-mtvl.onrender.com",
+  "https://finctrl-expense-tracking-system.onrender.com",
 ];
 
 app.use(
