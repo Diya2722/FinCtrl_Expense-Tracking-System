@@ -5,7 +5,7 @@ import { env } from "./config/env.js";
 const startServer = async () => {
   try {
     await connectDb();
-    const server = app.listen(env.port, () => {
+    const server = app.listen(env.port, '0.0.0.0', () => {
       console.log(`Backend server running on http://localhost:${env.port}`);
     });
 
