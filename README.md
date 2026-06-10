@@ -1,152 +1,89 @@
-# FinCtrl – Expense Tracking System
+# FinCtrl — Expense Tracking System
 
-A full-stack MERN expense tracker with OTP-based password management, admin dashboard, and Cloudinary image uploads.
+A full-stack MERN application to manage personal finances. Users can track their income and expenses, visualize spending patterns through charts, manage custom categories, and export their transaction history. A separate admin panel allows platform-level user and report management.
+
+---
+
+## Features
+
+### Authentication
+- User registration and login with JWT-based authentication
+- Role-based access — separate flows for users and admins
+- OTP-verified password reset via email (no token exposed in response)
+- OTP-verified password change for logged-in users
+- Profile photo upload via Cloudinary
+
+### Dashboard
+- Summary cards showing total income, total expense, and net balance
+- Bar chart comparing income vs expenses over time
+- Pie chart showing expense distribution by category
+- Recent transactions list
+
+### Income & Expense Management
+- Add, edit, and delete income and expense transactions
+- Each transaction includes title, amount, date, category, and notes
+- Transactions displayed with sorting by date
+
+### Categories
+- Create and manage custom income and expense categories
+- Emoji picker support for category icons
+- Default categories auto-created on registration
+
+### Filters
+- Filter transactions by date range, transaction type, and category
+- Results update instantly based on selected filters
+
+### Export
+- Download income or expense transactions as an Excel file
+
+### Admin Panel
+- Separate admin login and dashboard
+- View all registered users
+- Edit or delete user accounts along with all their data
+- View system-wide reports and records
 
 ---
 
 ## Tech Stack
 
-| Layer     | Technology |
-|-----------|------------|
-| Frontend  | React 19, Vite, Tailwind CSS v4, Recharts |
-| Backend   | Node.js, Express, MongoDB Atlas, Mongoose |
-| Auth      | JWT, bcryptjs |
-| Email OTP | Nodemailer + Gmail App Password |
-| Images    | Cloudinary |
-| Deploy    | Render (backend web service + frontend static site) |
+**Frontend**
+- React 19, Vite
+- Tailwind CSS
+- Recharts (charts)
+- React Router DOM
+- Axios
+- React Hot Toast
+- Lucide React
+- Emoji Picker React
 
----
-
-## Local Development Setup
-
-### Prerequisites
-- Node.js v18+
-- npm v9+
-- MongoDB Atlas account
-- Gmail account with **App Password** enabled (for OTP)
-
-### 1. Clone & Install
-
-```bash
-# Install frontend dependencies
-npm install
-
-# Install backend dependencies
-npm install --prefix backend
-```
-
-### 2. Configure Environment
-
-```bash
-cd backend
-cp .env.example .env
-```
-
-Fill in your `.env`:
-
-```
-PORT=5000
-CLIENT_URL=http://localhost:5173
-MONGO_URI=mongodb+srv://...
-JWT_SECRET=any_long_random_string
-JWT_EXPIRES_IN=7d
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASSWORD=xxxx xxxx xxxx xxxx   ← Gmail App Password (not your login password)
-```
-
-#### How to get a Gmail App Password
-1. Go to [Google Account](https://myaccount.google.com) → **Security**
-2. Enable **2-Step Verification** if not already on
-3. Search for **App passwords** → create one for "Mail"
-4. Use the 16-character password (with spaces) as `EMAIL_PASSWORD`
-
-### 3. Run
-
-```bash
-# Terminal 1 – Backend
-cd backend
-npm run dev
-
-# Terminal 2 – Frontend
-npm run dev
-
-# OR both at once (from project root)
-npm run dev:all
-```
-
-Frontend → http://localhost:5173  
-Backend  → http://localhost:5000  
-API health → http://localhost:5000/api/health
-
-### Fix: Port 5000 Already In Use
-
-If you see `EADDRINUSE :::5000`, another process is using the port:
-
-**Windows:**
-```cmd
-netstat -ano | findstr :5000
-taskkill /PID <pid> /F
-```
-
-**Mac / Linux:**
-```bash
-lsof -ti:5000 | xargs kill -9
-```
-
-Or just change `PORT=5001` in `backend/.env`.
-
----
-
-## Deployment (Render)
-
-1. Push code to GitHub (`.env` is git-ignored, never committed)
-2. Create a **Web Service** for the backend:
-   - Root: `backend`  
-   - Build: `npm install`  
-   - Start: `npm start`
-   - Add all env vars from `.env.example` in the Render dashboard
-3. Create a **Static Site** for the frontend:
-   - Root: `.`  
-   - Build: `npm install && npm run build`  
-   - Publish: `dist`
-   - Add `VITE_API_BASE_URL=https://<your-backend>.onrender.com/api`
-4. Set `CLIENT_URL=https://<your-frontend>.onrender.com` in the backend env vars
-
----
-
-## Default Admin Credentials
-
-| Field    | Value |
-|----------|-------|
-| Email    | `diya.v.p.108@gmail.com` |
-| Password | `diyavp108` |
-
-> **Change these before deploying to production!** Update `seedAdmin()` in `backend/src/config/db.js`.
+**Backend**
+- Node.js, Express.js
+- MongoDB Atlas, Mongoose
+- JWT (jsonwebtoken)
+- Bcryptjs
+- Nodemailer (OTP email)
+- Morgan, CORS
 
 ---
 
 ## Project Structure
 
 ```
-├── frontend/          # React source files
-│   ├── pages/
-│   ├── components/
-│   ├── context/
-│   └── util/
+Expense_Tracking/
 ├── backend/
-│   ├── src/
-│   │   ├── config/    # db.js, env.js
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── utils/     # emailService.js, generateToken.js
-│   └── .env           # (git-ignored, create from .env.example)
-├── public/
-│   └── favicon.png    # FinCtrl logo (tab icon)
-├── dist/              # Production build output (git-ignored)
-├── index.html
-├── vite.config.js
-└── render.yaml
+│   └── src/
+│       ├── config/         # DB and env config
+│       ├── controllers/    # Auth, Transaction, Category, Dashboard, Filter
+│       ├── middleware/     # JWT auth, error handler
+│       ├── models/         # User, OTP, Transaction, Category
+│       ├── routes/         # All API routes
+│       ├── services/       # Category default seeding
+│       └── utils/          # Email, token, CSV, async handler
+└── frontend/
+    ├── admin/              # Admin panel pages and components
+    ├── components/         # Reusable UI components
+    ├── context/            # Global state (AppContext)
+    ├── hooks/              # Custom React hooks
+    ├── pages/              # User-facing pages
+    └── util/               # Axios config, API endpoints, validators
 ```
-# FinCtrl_Expense-Tracking-System
