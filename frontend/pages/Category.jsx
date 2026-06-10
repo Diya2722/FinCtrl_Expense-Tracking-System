@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import useUser from "../hooks/useUser"; 
-import CategoryList from "../components/Categorylist";
+import CategoryList from "../components/CategoryList";
 import { useEffect, useState } from "react";
 import axiosConfig from "../util/axiosConfig";
 import API_ENDPOINTS from "../util/apiEndpoints";
